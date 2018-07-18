@@ -30,3 +30,26 @@ def validate_common(
         return wrapper
     return decorator
 
+
+def validate_keys(
+        required_keys, # ['a', 'b', 'c', 'd']
+        code_when_content_type_is_not_json=406,
+        key_missing_code=400):
+
+    def _validate_keys(src, keys):
+        for key in keys:
+            if key not in src:
+                abort(key_missing_code)
+
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            if not request.is_json:
+                abort(code_when_content_type_is_not_json)
+            else:
+                if required_keys:
+                    _validate_keys(request.json, required_keys)
+
+            return fn(*args, **kwargs)
+        return wrapper
+    return decorator
