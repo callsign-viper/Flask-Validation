@@ -20,7 +20,7 @@ def validate_common(
         code_when_content_type_is_not_json: int=406,
         key_missing_code: int=400,
         invalid_type_code: int=400):
-    
+
     def validate_key_and_type(src, mapping):
         for key, typ in mapping.items():
             if key not in src:
