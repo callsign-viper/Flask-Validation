@@ -2,11 +2,11 @@ import re
 
 
 class _BaseField:
-    def __init__(self, validator_function=None, enum=None, required=True, allow_null=False):
-        self.validator_function = validator_function
-        self.enum = enum
+    def __init__(self, validator_function=None, enum=None, required: bool=True, allow_null: bool=False):
         self.required = required
+        self.enum = enum
         self.allow_null = allow_null
+        self.validator_function = validator_function
 
     def validate(self, value):
         raise NotImplementedError()
@@ -52,3 +52,8 @@ class IntField(_BaseField):
         if self.max_value is not None and value > self.max_value:
             return False
 
+
+class BooleanField(_BaseField):
+    def validate(self, value):
+        if not isinstance(value, bool):
+            return False
