@@ -61,13 +61,6 @@ def validate_with_fields(key_field_mapping: dict, key_missing_code: int=400, val
             if key in src:
                 value = src[key]
 
-                if field.enum is not None and value not in field.enum:
-                    abort(validation_failure_code)
-                if not field.allow_null and value is None:
-                    abort(validation_failure_code)
-                if field.validator_function is not None and not field.validator_function(value):
-                    abort(validation_failure_code)
-
                 if not field.validate(value):
                     abort(validation_failure_code)
 

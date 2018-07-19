@@ -9,7 +9,14 @@ class _BaseField:
         self.validator_function = validator_function
 
     def validate(self, value):
-        raise NotImplementedError()
+        if self.enum is not None and value not in self.enum:
+            return False
+
+        if not self.allow_null and value is None:
+            return False
+
+        if self.validator_function is not None and not self.validator_function(value):
+            return False
 
 
 class StringField(_BaseField):
@@ -33,27 +40,47 @@ class StringField(_BaseField):
 
         if self.regex is not None and self.regex.match(value) is None:
             return False
+        
+        super(StringField, self).validate(value)
 
 
-class IntField(_BaseField):
+class NumberField(_BaseField):
     def __init__(self, min_value=None, max_value=None, **kwargs):
         self.min_value = min_value
         self.max_value = max_value
 
-        super(IntField, self).__init__(**kwargs)
+        super(NumberField, self).__init__(**kwargs)
 
     def validate(self, value):
-        if not isinstance(value, int):
-            return False
-
         if self.min_value is not None and value < self.min_value:
             return False
 
         if self.max_value is not None and value > self.max_value:
             return False
 
+        super(NumberField, self).validate(value)
+
+
+class IntField(NumberField):
+    def validate(self, value):
+        if not isinstance(value, int):
+            return False
+        
+        super(IntField, self).validate(value)
+
+
+class FloatField(NumberField):
+    def validate(self, value):
+        if not isinstance(value, float):
+            return False
+        
+        super(FloatField, self).validate(value)
+
 
 class BooleanField(_BaseField):
     def validate(self, value):
         if not isinstance(value, bool):
             return False
+        
+        super(BooleanField, self).validate(value)
+
