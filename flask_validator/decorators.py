@@ -1,5 +1,7 @@
 from functools import wraps
 
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 from flask import abort, request
 
 
@@ -69,6 +71,20 @@ def validate_with_fields(key_field_mapping: dict, key_missing_code: int=400, val
         def wrapper(*args, **kwargs):
             if key_field_mapping:
                 _validate_with_fields(request.json, key_field_mapping)
+
+            return fn(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
+def validate_with_jsonschema(jsonschema: dict, validation_error_abort_code: int=400):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            try:
+                validate(request.json, jsonschema)
+            except ValidationError:
+                abort(validation_error_abort_code)
 
             return fn(*args, **kwargs)
         return wrapper

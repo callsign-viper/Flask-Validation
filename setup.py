@@ -11,7 +11,8 @@ setup(
     maintainer='PlanB',
     maintainer_email='mingyu.planb@gmail.com',
     install_requires=[
-        'Flask'
+        'Flask',
+        'jsonschema'
     ],
     classifiers=[
         'Programming Language :: Python',
