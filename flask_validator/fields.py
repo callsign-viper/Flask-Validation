@@ -84,3 +84,22 @@ class BooleanField(_BaseField):
         
         super(BooleanField, self).validate(value)
 
+
+class ListField(_BaseField):
+    def __init__(self, min_length: int=None, max_length: int=None, **kwargs):
+        self.min_length = min_length
+        self.max_length = max_length
+
+        super(ListField, self).__init__(**kwargs)
+
+    def validate(self, value):
+        if not isinstance(value, list):
+            return False
+
+        if self.max_length is not None and len(value) > self.max_length:
+            return False
+
+        if self.min_length is not None and len(value) < self.min_length:
+            return False
+
+        super(ListField, self).validate(value)
