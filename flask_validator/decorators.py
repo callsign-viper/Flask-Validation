@@ -18,10 +18,17 @@ def json_required(invalid_content_type_code: int=406):
 
 
 def validate_keys(required_keys, key_missing_code: int=400):
+    # ['a', 'b', {'c', ['q' ,'z']}]
     def _validate_keys(src, keys):
         for key in keys:
-            if key not in src:
-                abort(key_missing_code)
+            if isinstance(key, str):
+                if key not in src:
+                    abort(key_missing_code)
+            elif isinstance(key, dict):
+                for k, v in key.items():
+                    if k not in src:
+                        abort(key_missing_code)
+                    _validate_keys(src[k], v)
 
     def decorator(fn):
         @wraps(fn)
