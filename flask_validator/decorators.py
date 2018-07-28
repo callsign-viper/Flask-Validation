@@ -18,7 +18,7 @@ def json_required(invalid_content_type_code: int=406):
 
 
 def validate_keys(required_keys, key_missing_code: int=400):
-    # ['a', 'b', {'c', ['q' ,'z']}]
+    # ['a', 'b', {'c': ['q' ,'z']}]
     def _validate_keys(src, keys):
         for key in keys:
             if isinstance(key, str):
@@ -42,13 +42,20 @@ def validate_keys(required_keys, key_missing_code: int=400):
 
 
 def validate_common(key_type_mapping: dict, key_missing_code: int=400, invalid_type_code: int=400):
+    # {'a': str, 'b': int, 'c': {'d': int, 'e': str}}
     def validate_key_and_type(src, mapping):
         for key, typ in mapping.items():
             if key not in src:
                 abort(key_missing_code)
 
-            if type(src[key]) is not typ:
-                abort(invalid_type_code)
+            if isinstance(typ, type):
+                if type(src[key]) is not typ:
+                    abort(invalid_type_code)
+            elif isinstance(typ, dict):
+                if not isinstance(src[key], dict):
+                    abort(invalid_type_code)
+                    
+                validate_key_and_type(src[key], typ)
 
     def decorator(fn):
         @wraps(fn)
