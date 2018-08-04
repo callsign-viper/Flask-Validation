@@ -24,3 +24,9 @@ class BaseTestCase(TestCase):
 
         return app.test_client()
 
+    def _json_post_request(self, client, *args, **kwargs):
+        return client.post('/', headers={'Content-Type': 'application/json'}, *args, **kwargs)
+
+    def _plain_post_request(self, client, *args, **kwargs):
+        return client.post('/', headers={'Content-Type': 'text/plain'}, *args, **kwargs)
+
