@@ -35,7 +35,7 @@ def validate_keys(required_keys, key_missing_code: int=400):
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
-            if required_keys:
+            if request.is_json and required_keys:
                 _validate_keys(request.json, required_keys)
 
             return fn(*args, **kwargs)
@@ -62,7 +62,7 @@ def validate_common(key_type_mapping: dict, key_missing_code: int=400, invalid_t
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
-            if key_type_mapping:
+            if request.is_json and key_type_mapping:
                 validate_key_and_type(request.json, key_type_mapping)
 
             return fn(*args, **kwargs)
@@ -92,7 +92,7 @@ def validate_with_fields(key_field_mapping: dict, key_missing_code: int=400, val
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
-            if key_field_mapping:
+            if request.is_json and key_field_mapping:
                 _validate_with_fields(request.json, key_field_mapping)
 
             return fn(*args, **kwargs)
@@ -104,10 +104,11 @@ def validate_with_jsonschema(jsonschema: dict, validation_error_abort_code: int=
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
-            try:
-                validate(request.json, jsonschema)
-            except ValidationError:
-                abort(validation_error_abort_code)
+            if request.is_json:
+                try:
+                    validate(request.json, jsonschema)
+                except ValidationError:
+                    abort(validation_error_abort_code)
 
             return fn(*args, **kwargs)
         return wrapper
