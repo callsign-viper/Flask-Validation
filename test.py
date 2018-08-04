@@ -34,3 +34,21 @@ class BaseTestCase(TestCase):
     def _plain_post_request(self, client, *args, **kwargs):
         return client.post('/', headers={'Content-Type': 'text/plain'}, *args, **kwargs)
 
+
+class TestJsonRequired(BaseTestCase):
+    def setUp(self):
+        self.target_func = json_required
+
+    def test_200(self):
+        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func())
+
+        resp = self._json_post_request(client)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_abort(self):
+        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func())
+        abort_code = self._get_default_argument_value(self.target_func, 0)
+
+        resp = self._plain_post_request(client)
+        self.assertEqual(resp.status_code, abort_code)
+
