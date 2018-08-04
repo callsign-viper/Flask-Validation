@@ -1,4 +1,5 @@
 from unittest import TestCase
+import inspect
 
 from flask import Flask
 from flask.testing import FlaskClient
@@ -23,6 +24,9 @@ class BaseTestCase(TestCase):
         app.add_url_rule('/', view_func=decorated_view_func, methods=['POST'])
 
         return app.test_client()
+
+    def _get_default_argument_value(self, func, position):
+        return inspect.getfullargspec(func).defaults[position]
 
     def _json_post_request(self, client, *args, **kwargs):
         return client.post('/', headers={'Content-Type': 'application/json'}, *args, **kwargs)
