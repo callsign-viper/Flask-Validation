@@ -52,3 +52,23 @@ class TestJsonRequired(BaseTestCase):
         resp = self._plain_post_request(client)
         self.assertEqual(resp.status_code, abort_code)
 
+
+class TestValidateKeys(BaseTestCase):
+    def setUp(self):
+        self.target_func = validate_keys
+
+    def test_200(self):
+        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func(['a', 'b', {'c': ['d', 'e']}]))
+
+        resp = self._json_post_request(client, json={'a': 1, 'b': 1, 'c': {'d': 1, 'e': 1}})
+        self.assertEqual(resp.status_code, 200)
+
+    def test_abort(self):
+        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func(['a', 'b', {'c': ['d', 'e']}]))
+        abort_code = self._get_default_argument_value(self.target_func, 0)
+
+        resp = self._json_post_request(client, json={'a': 1, 'b': 1, 'c': {'d': 1}})
+        self.assertEqual(resp.status_code, abort_code)
+
+
+class TestValidateCommon
