@@ -44,11 +44,11 @@ class TestJsonRequired(BaseTestCase):
         resp = self._json_post_request(self.client)
         self.assertEqual(resp.status_code, 200)
 
-    def test_abort(self):
-        abort_code = self._get_default_argument_value(self.target_func, 0)
+    def test_invalid_content_type(self):
+        invalid_content_type_abort_code = self._get_default_argument_value(self.target_func, 0)
 
         resp = self._plain_post_request(self.client)
-        self.assertEqual(resp.status_code, abort_code)
+        self.assertEqual(resp.status_code, invalid_content_type_abort_code)
 
 
 class TestValidateKeys(BaseTestCase):
@@ -117,3 +117,31 @@ class TestValidateWithFields(BaseTestCase):
 
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1})
         self.assertEqual(resp.status_code, key_missing_abort_code)
+
+
+class TestValidateWithJsonSchema(BaseTestCase):
+    def setUp(self):
+        self.target_func = validate_with_jsonschema
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func({
+            'type': 'object',
+            'properties': {
+                'a': {'type': 'string'},
+                'b': {'type': 'number'},
+                'c': {
+                    'type': 'object',
+                    'properties': {
+                        'd': {'type': 'number'}
+                    }
+                }
+            }
+        }))
+
+    def test_200(self):
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 1}})
+        self.assertEqual(resp.status_code, 200)
+
+    def test_validation_error(self):
+        validation_error_abort_code = self._get_default_argument_value(self.target_func, 0)
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 'a'}})
+
+        self.assertEqual(resp.status_code, validation_error_abort_code)
