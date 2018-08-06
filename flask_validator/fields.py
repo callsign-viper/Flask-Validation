@@ -12,8 +12,7 @@ class _BaseField:
         if self.enum is not None and value not in self.enum:
             return False
 
-        if not self.allow_null and value is None:
-            return False
+        # allow_null은 decorators.py에서 체크
 
         if self.validator_function is not None and not self.validator_function(value):
             return False
@@ -40,7 +39,7 @@ class StringField(_BaseField):
 
         if self.regex is not None and self.regex.match(value) is None:
             return False
-        
+
         super(StringField, self).validate(value)
 
 

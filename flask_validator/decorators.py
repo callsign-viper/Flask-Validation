@@ -73,17 +73,27 @@ def validate_common(key_type_mapping: dict, key_missing_code: int=400, invalid_t
 def validate_with_fields(key_field_mapping: dict, key_missing_code: int=400, validation_failure_code: int=400):
     # {'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}
     def _validate_with_fields(src, mapping):
-        for key, field in mapping:
+        for key, field in mapping.items():
             if isinstance(field, _BaseField):
                 if field.required and key not in src:
+                    # required일 때만 not in에 대해 abort
                     abort(key_missing_code)
 
                 if key in src:
+                    # required가 True던 False던, 들어 있으면 validate
                     value = src[key]
 
-                    if not field.validate(value):
+                    if field.allow_null:
+                        if value is None:
+                            # nullable하고, 실제로 value가 null이라면 validation 필요 x
+                            continue
+
+                    if field.validate(value) is False:
                         abort(validation_failure_code)
             elif isinstance(field, dict):
+                if key not in src:
+                    abort(key_missing_code)
+
                 if not isinstance(src[key], dict):
                     abort(validation_failure_code)
 
