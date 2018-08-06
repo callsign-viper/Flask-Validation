@@ -54,7 +54,15 @@ class TestJsonRequired(BaseTestCase):
 class TestValidateKeys(BaseTestCase):
     def setUp(self):
         self.target_func = validate_keys
-        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func(['a', 'b', {'c': ['d', 'e']}]))
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func([
+            'a',
+            'b',
+            {
+                'c': [
+                    'd', 'e'
+                ]
+            }
+        ]))
 
     def test_200(self):
         resp = self._json_post_request(self.client, json={'a': 1, 'b': 1, 'c': {'d': 1, 'e': 1}})
@@ -70,7 +78,13 @@ class TestValidateKeys(BaseTestCase):
 class TestValidateCommon(BaseTestCase):
     def setUp(self):
         self.target_func = validate_common
-        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func({'a': str, 'b': int, 'c': {'d': int}}))
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func({
+            'a': str,
+            'b': int,
+            'c': {
+                'd': int
+            }
+        }))
 
     def test_200(self):
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 1}})
@@ -79,5 +93,27 @@ class TestValidateCommon(BaseTestCase):
     def test_key_missing(self):
         key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
 
-        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 'a'}})
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1})
+        self.assertEqual(resp.status_code, key_missing_abort_code)
+
+
+class TestValidateWithFields(BaseTestCase):
+    def setUp(self):
+        self.target_func = validate_with_fields
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func({
+            'a': StringField(max_length=10),
+            'b': IntField(min_value=0),
+            'c': {
+                'd': BooleanField(allow_null=True)
+            }
+        }))
+
+    def test_200(self):
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': None}})
+        self.assertEqual(resp.status_code, 200)
+
+    def test_key_missing(self):
+        key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
+
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1})
         self.assertEqual(resp.status_code, key_missing_abort_code)
