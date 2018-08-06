@@ -1,4 +1,4 @@
-# Flask-Validator-Extended
+# Flask-Validator-Extended [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validator.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validator)
 Pythonic JSON payload validator for requested JSON payload of Flask
 
 Flask를 위한 view decorator 기반의 JSON 요청 데이터 validation 라이브러리. [Flask Large Application Example](https://github.com/JoMingyu/Flask-Large-Application-Example)에서 직접 구현해 사용하던 몇 가지 view decorator에서 출발했고, [MongoEngine](https://github.com/MongoEngine/mongoengine)의 설계에 영향을 받았습니다.
