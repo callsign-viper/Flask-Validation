@@ -38,37 +38,46 @@ class BaseTestCase(TestCase):
 class TestJsonRequired(BaseTestCase):
     def setUp(self):
         self.target_func = json_required
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func())
 
     def test_200(self):
-        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func())
-
-        resp = self._json_post_request(client)
+        resp = self._json_post_request(self.client)
         self.assertEqual(resp.status_code, 200)
 
     def test_abort(self):
-        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func())
         abort_code = self._get_default_argument_value(self.target_func, 0)
 
-        resp = self._plain_post_request(client)
+        resp = self._plain_post_request(self.client)
         self.assertEqual(resp.status_code, abort_code)
 
 
 class TestValidateKeys(BaseTestCase):
     def setUp(self):
         self.target_func = validate_keys
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func(['a', 'b', {'c': ['d', 'e']}]))
 
     def test_200(self):
-        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func(['a', 'b', {'c': ['d', 'e']}]))
-
-        resp = self._json_post_request(client, json={'a': 1, 'b': 1, 'c': {'d': 1, 'e': 1}})
+        resp = self._json_post_request(self.client, json={'a': 1, 'b': 1, 'c': {'d': 1, 'e': 1}})
         self.assertEqual(resp.status_code, 200)
 
-    def test_abort(self):
-        client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func(['a', 'b', {'c': ['d', 'e']}]))
-        abort_code = self._get_default_argument_value(self.target_func, 0)
+    def test_key_missing(self):
+        key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
 
-        resp = self._json_post_request(client, json={'a': 1, 'b': 1, 'c': {'d': 1}})
-        self.assertEqual(resp.status_code, abort_code)
+        resp = self._json_post_request(self.client, json={'a': 1, 'b': 1, 'c': {'d': 1}})
+        self.assertEqual(resp.status_code, key_missing_abort_code)
 
 
-class TestValidateCommon
+class TestValidateCommon(BaseTestCase):
+    def setUp(self):
+        self.target_func = validate_common
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func({'a': str, 'b': int, 'c': {'d': int}}))
+
+    def test_200(self):
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 1}})
+        self.assertEqual(resp.status_code, 200)
+
+    def test_key_missing(self):
+        key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
+
+        resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 'a'}})
+        self.assertEqual(resp.status_code, key_missing_abort_code)
