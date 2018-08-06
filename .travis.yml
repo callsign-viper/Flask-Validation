@@ -11,16 +11,9 @@ python:
   - "3.6"
   - "3.6-dev"  # 3.6 development branch
   - "3.7-dev"  # 3.7 development branch
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
-# command to run tests
-script:
-  - python3 -m "nose" --verbose --with-coverage --cover-package=flask-validator test.py
 
-after_success:
-- coverage report
-- coveralls
-
+install: pip install -r requirements.txt
+script: python3 -m "nose" --verbose --with-coverage --cover-package=flask-validator test.py
+after_success: coveralls
 notifications:
   email: false
