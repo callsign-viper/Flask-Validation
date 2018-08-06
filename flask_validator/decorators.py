@@ -7,29 +7,29 @@ from flask import abort, request
 from .fields import _BaseField
 
 
-def json_required(invalid_content_type_code: int=406):
+def json_required(invalid_content_type_abort_code: int=406):
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
             if not request.is_json:
-                abort(invalid_content_type_code)
+                abort(invalid_content_type_abort_code)
 
             return fn(*args, **kwargs)
         return wrapper
     return decorator
 
 
-def validate_keys(required_keys, key_missing_code: int=400):
+def validate_keys(required_keys, key_missing_abort_code: int=400):
     # ['a', 'b', {'c': ['q' ,'z']}]
     def _validate_keys(src, keys):
         for key in keys:
             if isinstance(key, str):
                 if key not in src:
-                    abort(key_missing_code)
+                    abort(key_missing_abort_code)
             elif isinstance(key, dict):
                 for k, v in key.items():
                     if k not in src:
-                        abort(key_missing_code)
+                        abort(key_missing_abort_code)
                     _validate_keys(src[k], v)
 
     def decorator(fn):
@@ -43,19 +43,19 @@ def validate_keys(required_keys, key_missing_code: int=400):
     return decorator
 
 
-def validate_common(key_type_mapping: dict, key_missing_code: int=400, invalid_type_code: int=400):
+def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, invalid_type_abort_code: int=400):
     # {'a': str, 'b': int, 'c': {'d': int, 'e': str}}
     def validate_key_and_type(src, mapping):
         for key, typ in mapping.items():
             if key not in src:
-                abort(key_missing_code)
+                abort(key_missing_abort_code)
 
             if isinstance(typ, type):
                 if type(src[key]) is not typ:
-                    abort(invalid_type_code)
+                    abort(invalid_type_abort_code)
             elif isinstance(typ, dict):
                 if not isinstance(src[key], dict):
-                    abort(invalid_type_code)
+                    abort(invalid_type_abort_code)
 
                 validate_key_and_type(src[key], typ)
 
@@ -70,14 +70,14 @@ def validate_common(key_type_mapping: dict, key_missing_code: int=400, invalid_t
     return decorator
 
 
-def validate_with_fields(key_field_mapping: dict, key_missing_code: int=400, validation_failure_code: int=400):
+def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=400, validation_failure_abort_code: int=400):
     # {'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}
     def _validate_with_fields(src, mapping):
         for key, field in mapping.items():
             if isinstance(field, _BaseField):
                 if field.required and key not in src:
                     # required일 때만 not in에 대해 abort
-                    abort(key_missing_code)
+                    abort(key_missing_abort_code)
 
                 if key in src:
                     # required가 True던 False던, 들어 있으면 validate
@@ -88,14 +88,16 @@ def validate_with_fields(key_field_mapping: dict, key_missing_code: int=400, val
                             # nullable하고, 실제로 value가 null이라면 validation 필요 x
                             continue
 
+                    print(value)
+                    print(field.validate(value))
                     if field.validate(value) is False:
-                        abort(validation_failure_code)
+                        abort(validation_failure_abort_code)
             elif isinstance(field, dict):
                 if key not in src:
-                    abort(key_missing_code)
+                    abort(key_missing_abort_code)
 
                 if not isinstance(src[key], dict):
-                    abort(validation_failure_code)
+                    abort(validation_failure_abort_code)
 
                 _validate_with_fields(src[key], field)
 

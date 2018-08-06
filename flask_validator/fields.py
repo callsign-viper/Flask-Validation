@@ -40,7 +40,7 @@ class StringField(_BaseField):
         if self.regex is not None and self.regex.match(value) is None:
             return False
 
-        super(StringField, self).validate(value)
+        return super(StringField, self).validate(value)
 
 
 class NumberField(_BaseField):
@@ -57,7 +57,7 @@ class NumberField(_BaseField):
         if self.max_value is not None and value > self.max_value:
             return False
 
-        super(NumberField, self).validate(value)
+        return super(NumberField, self).validate(value)
 
 
 class IntField(NumberField):
@@ -65,7 +65,7 @@ class IntField(NumberField):
         if not isinstance(value, int):
             return False
         
-        super(IntField, self).validate(value)
+        return super(IntField, self).validate(value)
 
 
 class FloatField(NumberField):
@@ -73,7 +73,7 @@ class FloatField(NumberField):
         if not isinstance(value, float):
             return False
         
-        super(FloatField, self).validate(value)
+        return super(FloatField, self).validate(value)
 
 
 class BooleanField(_BaseField):
@@ -81,7 +81,7 @@ class BooleanField(_BaseField):
         if not isinstance(value, bool):
             return False
         
-        super(BooleanField, self).validate(value)
+        return super(BooleanField, self).validate(value)
 
 
 class ListField(_BaseField):
@@ -101,4 +101,4 @@ class ListField(_BaseField):
         if self.min_length is not None and len(value) < self.min_length:
             return False
 
-        super(ListField, self).validate(value)
+        return super(ListField, self).validate(value)
