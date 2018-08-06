@@ -13,7 +13,6 @@ python:
   - "3.7-dev"  # 3.7 development branch
 
 install: pip install -r requirements.txt
-script: python3 -m "nose" --verbose --with-coverage --cover-package=flask-validator test.py
-after_success: coveralls
+script: python3 -m "nose" --verbose test.py
 notifications:
   email: false
