@@ -1,9 +1,9 @@
-.. flask_validator documentation master file, created by
+.. flask_validate documentation master file, created by
    sphinx-quickstart on Wed Aug  8 17:12:45 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Flask-Validator's documentation!
+Welcome to Flask-Validate's documentation!
 ===========================================
 
 
