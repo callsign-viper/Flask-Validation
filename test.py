@@ -1,5 +1,4 @@
 from unittest import TestCase
-import inspect
 
 from flask import Flask
 from flask.testing import FlaskClient
@@ -20,13 +19,11 @@ class BaseTestCase(TestCase):
 
         decorated_view_func = decorator_func(view_func)
         app = Flask(__name__)
+        Validator(app)
 
         app.add_url_rule('/', view_func=decorated_view_func, methods=['POST'])
 
         return app.test_client()
-
-    def _get_default_argument_value(self, func, position):
-        return inspect.getfullargspec(func).defaults[position]
 
     def _json_post_request(self, client, *args, **kwargs):
         return client.post('/', headers={'Content-Type': 'application/json'}, *args, **kwargs)
@@ -45,10 +42,8 @@ class TestJsonRequired(BaseTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_invalid_content_type(self):
-        invalid_content_type_abort_code = self._get_default_argument_value(self.target_func, 0)
-
         resp = self._plain_post_request(self.client)
-        self.assertEqual(resp.status_code, invalid_content_type_abort_code)
+        self.assertEqual(resp.status_code, 406)
 
 
 class TestValidateKeys(BaseTestCase):
@@ -69,10 +64,8 @@ class TestValidateKeys(BaseTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_key_missing(self):
-        key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
-
         resp = self._json_post_request(self.client, json={'a': 1, 'b': 1, 'c': {'d': 1}})
-        self.assertEqual(resp.status_code, key_missing_abort_code)
+        self.assertEqual(resp.status_code, 400)
 
 
 class TestValidateCommon(BaseTestCase):
@@ -91,16 +84,12 @@ class TestValidateCommon(BaseTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_key_missing(self):
-        key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
-
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1})
-        self.assertEqual(resp.status_code, key_missing_abort_code)
+        self.assertEqual(resp.status_code, 400)
 
     def test_invalid_type(self):
-        invalid_type_abort_code = self._get_default_argument_value(self.target_func, 1)
-
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 'a'}})
-        self.assertEqual(resp.status_code, invalid_type_abort_code)
+        self.assertEqual(resp.status_code, 400)
 
 
 class TestValidateWithFields(BaseTestCase):
@@ -121,17 +110,12 @@ class TestValidateWithFields(BaseTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_key_missing(self):
-        key_missing_abort_code = self._get_default_argument_value(self.target_func, 0)
-
         resp = self._json_post_request(self.client, json={'a': 'a'})
-        self.assertEqual(resp.status_code, key_missing_abort_code)
+        self.assertEqual(resp.status_code, 400)
 
     def test_validation_failure(self):
-        validation_failure_abort_code = self._get_default_argument_value(self.target_func, 1)
-
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': 1.5, 'd': [1, 2, 3], 'e': {'f': None}})
-        print(resp.status_code)
-        self.assertEqual(resp.status_code, validation_failure_abort_code)
+        self.assertEqual(resp.status_code, 400)
 
 
 class TestValidateWithJsonSchema(BaseTestCase):
@@ -156,7 +140,6 @@ class TestValidateWithJsonSchema(BaseTestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_validation_error(self):
-        validation_error_abort_code = self._get_default_argument_value(self.target_func, 0)
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 'a'}})
 
-        self.assertEqual(resp.status_code, validation_error_abort_code)
+        self.assertEqual(resp.status_code, 400)

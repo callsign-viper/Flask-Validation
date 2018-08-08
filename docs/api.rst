@@ -1,6 +1,12 @@
 API documentation
 ========================
 
+Configuring Flask-Validate
+---------------------------
+.. automodule:: flask_validator.validator
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Decorators
 -----------

@@ -10,9 +10,10 @@ Flask를 위한 view decorator 기반의 JSON 요청 데이터 validation 라이
 
 ```
 from flask import Flask
-from flask_validator import json_required
+from flask_validator import json_requiredd, Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @json_required()
@@ -26,9 +27,10 @@ def index():
 
 ```
 from flask import Flask
-from flask_validator import validate_keys
+from flask_validator import validate_keysd, Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_keys(['name', 'age'])
@@ -41,9 +43,10 @@ Iterable 내부의 dictionary로 nested JSON 처리가 가능합니다.
 
 ```
 from flask import Flask
-from flask_validator import validate_keys
+from flask_validator import validate_keys, Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_keys(['name', 'age', {'position': ['latitude', 'longitude']}])
@@ -57,9 +60,10 @@ key와 타입을 함께 검사합니다. 요청 payload에 key_type_mapping에�
 
 ```
 from flask import Flask
-from flask_validator import validate_common
+from flask_validator import validate_common, Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_common({'name': str, 'age': int})
@@ -72,9 +76,10 @@ value를 dictionary로 주어 nested JSON 처리가 가능합니다.
 
 ```
 from flask import Flask
-from flask_validator import validate_common
+from flask_validator import validate_common, Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_common({'name': str, 'age': int, 'position': {'latitude': float, 'longitude': float}})
@@ -90,8 +95,10 @@ def index():
 from flask import Flask
 from flask_validator import validate_with_fields
 from flask_validator import StringField, IntField
+from flask_Validator import Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_with_fields({'name': StringField(allow_empty=False, regex='[가-힇]+'), 'age': IntField(min_value=0)})
@@ -106,8 +113,10 @@ value를 dictionary로 주어 nested JSON 처리가 가능합니다.
 from flask import Flask
 from flask_validator import validate_with_fields
 from flask_validator import StringField, IntField
+from flask_Validator import Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_with_fields({
@@ -129,8 +138,10 @@ def index():
 ```
 from flask import Flask
 from flask_validator import validate_with_jsonschema
+from flask_Validator import Validator
 
 app = Flask(__name__)
+Validator(app)
 
 
 @validate_with_jsonschema({

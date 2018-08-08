@@ -2,12 +2,12 @@ from functools import wraps
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
-from flask import abort, request
+from flask import abort, request, current_app
 
 from .fields import _BaseField
 
 
-def json_required(invalid_content_type_abort_code: int=406):
+def json_required():
     """
     A decorator to check header type is ``application/json``
 
@@ -19,6 +19,7 @@ def json_required(invalid_content_type_abort_code: int=406):
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
+            invalid_content_type_abort_code = current_app.config['INVALID_CONTENT_TYPE_ABORT_CODE']
             if not request.is_json:
                 abort(invalid_content_type_abort_code)
 
@@ -27,7 +28,7 @@ def json_required(invalid_content_type_abort_code: int=406):
     return decorator
 
 
-def validate_keys(required_keys, key_missing_abort_code: int=400):
+def validate_keys(required_keys):
     """
     A decorator to check request payload keys
 
@@ -41,7 +42,8 @@ def validate_keys(required_keys, key_missing_abort_code: int=400):
     :param key_missing_abort_code: abort code
     """
     # ['a', 'b', {'c': ['q' ,'z']}]
-    def _validate_keys(src, keys):
+
+    def _validate_keys(src, keys, key_missing_abort_code):
         for key in keys:
             if isinstance(key, str):
                 if key not in src:
@@ -50,20 +52,21 @@ def validate_keys(required_keys, key_missing_abort_code: int=400):
                 for k, v in key.items():
                     if k not in src:
                         abort(key_missing_abort_code)
-                    _validate_keys(src[k], v)
+                    _validate_keys(src[k], v, key_missing_abort_code)
 
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
+            key_missing_abort_code = current_app.config['KEY_MISSING_ABORT_CODE']
             if request.is_json and required_keys:
-                _validate_keys(request.json, required_keys)
+                _validate_keys(request.json, required_keys, key_missing_abort_code)
 
             return fn(*args, **kwargs)
         return wrapper
     return decorator
 
 
-def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, invalid_type_abort_code: int=400):
+def validate_common(key_type_mapping: dict):
     """
     A decorator to check request payload keys and type
 
@@ -79,7 +82,8 @@ def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, inv
     :param invalid_type_abort_code: abort code
     """
     # {'a': str, 'b': int, 'c': {'d': int, 'e': str}}
-    def validate_key_and_type(src, mapping):
+
+    def validate_key_and_type(src, mapping, key_missing_abort_code, invalid_type_abort_code):
         for key, typ in mapping.items():
             if key not in src:
                 abort(key_missing_abort_code)
@@ -91,20 +95,22 @@ def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, inv
                 if not isinstance(src[key], dict):
                     abort(invalid_type_abort_code)
 
-                validate_key_and_type(src[key], typ)
+                validate_key_and_type(src[key], typ, key_missing_abort_code, invalid_type_abort_code)
 
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
+            key_missing_abort_code = current_app.config['KEY_MISSING_ABORT_CODE']
+            invalid_type_abort_code = current_app.config['INVALID_TYPE_ABORT_CODE']
             if request.is_json and key_type_mapping:
-                validate_key_and_type(request.json, key_type_mapping)
+                validate_key_and_type(request.json, key_type_mapping, key_missing_abort_code, invalid_type_abort_code)
 
             return fn(*args, **kwargs)
         return wrapper
     return decorator
 
 
-def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=400, validation_failure_abort_code: int=400):
+def validate_with_fields(key_field_mapping: dict):
     """
     A decorator to check request payload with Field classes in fields.py
 
@@ -119,7 +125,8 @@ def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=40
     :param validation_failure_abort_code: abort code
     """
     # {'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}
-    def _validate_with_fields(src, mapping):
+
+    def _validate_with_fields(src, mapping, key_missing_abort_code, validation_failure_abort_code):
         for key, field in mapping.items():
             if isinstance(field, _BaseField):
                 if field.required and key not in src:
@@ -146,20 +153,22 @@ def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=40
                 if not isinstance(src[key], dict):
                     abort(validation_failure_abort_code)
 
-                _validate_with_fields(src[key], field)
+                _validate_with_fields(src[key], field, key_missing_abort_code, validation_failure_abort_code)
 
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
+            key_missing_abort_code = current_app.config['KEY_MISSING_ABORT_CODE']
+            validation_failure_abort_code = current_app.config['VALIDATION_FAILURE_ABORT_CODE']
             if request.is_json and key_field_mapping:
-                _validate_with_fields(request.json, key_field_mapping)
+                _validate_with_fields(request.json, key_field_mapping, key_missing_abort_code, validation_failure_abort_code)
 
             return fn(*args, **kwargs)
         return wrapper
     return decorator
 
 
-def validate_with_jsonschema(jsonschema: dict, validation_error_abort_code: int=400):
+def validate_with_jsonschema(jsonschema: dict):
     """
     A decorator to check request payload with jsonschema
 
@@ -168,9 +177,11 @@ def validate_with_jsonschema(jsonschema: dict, validation_error_abort_code: int=
     :param jsonschema: jsonschema
     :param validation_error_abort_code: abort code
     """
+
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
+            validation_error_abort_code = current_app.config['VALIDATION_ERROR_ABORT_CODE']
             if request.is_json:
                 try:
                     validate(request.json, jsonschema)
