@@ -12,7 +12,7 @@ def json_required(invalid_content_type_abort_code: int=406):
     A decorator to check header type is ``application/json``
 
     if you decorate endpoint with this, it will ensure that the request has a valid payload type before access endpoint
-    if header's content type is not ``application/json``, abort the :param:`invalid_content_type_abort_code`
+    if header's content type is not ``application/json``, abort the ``invalid_content_type_abort_code``
 
     :param invalid_content_type_abort_code: abort code
     """
@@ -31,10 +31,10 @@ def validate_keys(required_keys, key_missing_abort_code: int=400):
     """
     A decorator to check request payload keys
 
-    if you decorate endpoint with this, it will ensure that the request's json body includes :param:'required_keys`.
-    if request body didn't includes :param:`required_keys` , abort with :param:`key_missing_abort_code`
+    if you decorate endpoint with this, it will ensure that the request's json body includes '`required_keys'`.
+    if request body didn't includes ``required_keys`` , abort with  ``key_missing_abort_code``
 
-    Nested JSON processing is possible by inserting the dictionary in the :param:`required_keys`
+    Nested JSON processing is possible by inserting the dictionary in the  ``required_keys``
     like this ``['a', 'b', {'c': ['q' ,'z']}]``
 
     :param required_keys: key list to check request body's JSON
@@ -67,10 +67,10 @@ def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, inv
     """
     A decorator to check request payload keys and type
 
-    If the request payload does not include the key in :param:`key_type_mapping`, abort the :param:`key_missing_code`,
-    and if the type is not correct, abort the :param:`invalid_type_code`.
+    If the request payload does not include the key in  ``key_type_mapping``, abort the  ``key_missing_code``,
+    and if the type is not correct, abort the  ``invalid_type_code``.
 
-    Nested JSON processing is possible by inserting the dictionary in the :param:`required_keys`
+    Nested JSON processing is possible by inserting the dictionary in the  ``required_keys``
     like this ``{'a': str, 'b': int, 'c': {'d': int, 'e': str}}``
 
 
@@ -108,10 +108,10 @@ def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=40
     """
     A decorator to check request payload with Field classes in fields.py
 
-    If the request payload does not include the key in key_type_mapping, abort :param:`key_missing_code`
-    and abort :param:`validation_failure_code` if field validation fails.
+    If the request payload does not include the key in key_type_mapping, abort  ``key_missing_code``
+    and abort  ``validation_failure_code`` if field validation fails.
 
-    Nested JSON processing is possible by inserting the dictionary in the :param:`required_keys`
+    Nested JSON processing is possible by inserting the dictionary in the  ``required_keys``
     like this ``{'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}``
 
     :param key_field_mapping: A dictionary for payload check with this form ``{<key name>: <field class>}``
@@ -163,7 +163,7 @@ def validate_with_jsonschema(jsonschema: dict, validation_error_abort_code: int=
     """
     A decorator to check request payload with jsonschema
 
-    If validation fails(jsonschema.exceptions.ValidationError raised), abort the :param:`validation_error_abort_code`.
+    If validation fails(jsonschema.exceptions.ValidationError raised), abort the  ``validation_error_abort_code``.
 
     :param jsonschema: jsonschema
     :param validation_error_abort_code: abort code

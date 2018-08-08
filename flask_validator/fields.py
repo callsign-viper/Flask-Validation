@@ -113,10 +113,6 @@ class ListField(_BaseField):
         super(ListField, self).__init__(**kwargs)
 
     def validate(self, value):
-        """
-        :param value:
-        :return:
-        """
         if not isinstance(value, list):
             return False
 
