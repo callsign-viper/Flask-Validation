@@ -19,9 +19,9 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'flask_validator'
-copyright = '2018, Author'
-author = 'Author'
+project = 'flask_validate'
+copyright = '2018, JoMingyu, devArtoria'
+author = 'JoMingyu, devArtoria'
 
 # The short X.Y version
 version = ''
