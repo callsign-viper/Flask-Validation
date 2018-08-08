@@ -20,6 +20,7 @@ class BaseTestCase(TestCase):
 
         decorated_view_func = decorator_func(view_func)
         app = Flask(__name__)
+        Validator(app)
 
         app.add_url_rule('/', view_func=decorated_view_func, methods=['POST'])
 
