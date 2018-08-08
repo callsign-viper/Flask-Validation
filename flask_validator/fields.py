@@ -2,6 +2,9 @@ import re
 
 
 class _BaseField:
+    """
+    Base field class
+    """
     def __init__(self, validator_function=None, enum=None, required: bool=True, allow_null: bool=False):
         self.required = required
         self.enum = enum
@@ -19,6 +22,9 @@ class _BaseField:
 
 
 class StringField(_BaseField):
+    """
+    String field class
+    """
     def __init__(self, allow_empty: bool=True, min_length: int=None, max_length: int=None, regex=None, **kwargs):
         self.allow_empty = allow_empty
         self.min_length = min_length
@@ -44,6 +50,9 @@ class StringField(_BaseField):
 
 
 class NumberField(_BaseField):
+    """
+    Number field class
+    """
     def __init__(self, min_value=None, max_value=None, **kwargs):
         self.min_value = min_value
         self.max_value = max_value
@@ -61,6 +70,9 @@ class NumberField(_BaseField):
 
 
 class IntField(NumberField):
+    """
+    Int field class
+    """
     def validate(self, value):
         if not isinstance(value, int):
             return False
@@ -69,6 +81,9 @@ class IntField(NumberField):
 
 
 class FloatField(NumberField):
+    """
+    Float field class
+    """
     def validate(self, value):
         if not isinstance(value, float):
             return False
@@ -77,6 +92,9 @@ class FloatField(NumberField):
 
 
 class BooleanField(_BaseField):
+    """
+    Boolean field class
+    """
     def validate(self, value):
         if not isinstance(value, bool):
             return False
@@ -85,6 +103,9 @@ class BooleanField(_BaseField):
 
 
 class ListField(_BaseField):
+    """
+    List field class
+    """
     def __init__(self, min_length: int=None, max_length: int=None, **kwargs):
         self.min_length = min_length
         self.max_length = max_length
@@ -92,6 +113,10 @@ class ListField(_BaseField):
         super(ListField, self).__init__(**kwargs)
 
     def validate(self, value):
+        """
+        :param value:
+        :return:
+        """
         if not isinstance(value, list):
             return False
 

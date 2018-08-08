@@ -8,6 +8,14 @@ from .fields import _BaseField
 
 
 def json_required(invalid_content_type_abort_code: int=406):
+    """
+    A decorator to check header type is ``application/json``
+
+    if you decorate endpoint with this, it will ensure that the request has a valid payload type before access endpoint
+    if header's content type is not ``application/json``, abort the :param:`invalid_content_type_abort_code`
+
+    :param invalid_content_type_abort_code: abort code
+    """
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
@@ -20,6 +28,18 @@ def json_required(invalid_content_type_abort_code: int=406):
 
 
 def validate_keys(required_keys, key_missing_abort_code: int=400):
+    """
+    A decorator to check request payload keys
+
+    if you decorate endpoint with this, it will ensure that the request's json body includes :param:'required_keys`.
+    if request body didn't includes :param:`required_keys` , abort with :param:`key_missing_abort_code`
+
+    Nested JSON processing is possible by inserting the dictionary in the :param:`required_keys`
+    like this ``['a', 'b', {'c': ['q' ,'z']}]``
+
+    :param required_keys: key list to check request body's JSON
+    :param key_missing_abort_code: abort code
+    """
     # ['a', 'b', {'c': ['q' ,'z']}]
     def _validate_keys(src, keys):
         for key in keys:
@@ -44,6 +64,20 @@ def validate_keys(required_keys, key_missing_abort_code: int=400):
 
 
 def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, invalid_type_abort_code: int=400):
+    """
+    A decorator to check request payload keys and type
+
+    If the request payload does not include the key in :param:`key_type_mapping`, abort the :param:`key_missing_code`,
+    and if the type is not correct, abort the :param:`invalid_type_code`.
+
+    Nested JSON processing is possible by inserting the dictionary in the :param:`required_keys`
+    like this ``{'a': str, 'b': int, 'c': {'d': int, 'e': str}}``
+
+
+    :param key_type_mapping: A dictionary for payload check with this form ``{<key name>: <type class>}``
+    :param key_missing_abort_code: abort code
+    :param invalid_type_abort_code: abort code
+    """
     # {'a': str, 'b': int, 'c': {'d': int, 'e': str}}
     def validate_key_and_type(src, mapping):
         for key, typ in mapping.items():
@@ -71,6 +105,19 @@ def validate_common(key_type_mapping: dict, key_missing_abort_code: int=400, inv
 
 
 def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=400, validation_failure_abort_code: int=400):
+    """
+    A decorator to check request payload with Field classes in fields.py
+
+    If the request payload does not include the key in key_type_mapping, abort :param:`key_missing_code`
+    and abort :param:`validation_failure_code` if field validation fails.
+
+    Nested JSON processing is possible by inserting the dictionary in the :param:`required_keys`
+    like this ``{'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}``
+
+    :param key_field_mapping: A dictionary for payload check with this form ``{<key name>: <field class>}``
+    :param key_missing_abort_code: abort code
+    :param validation_failure_abort_code: abort code
+    """
     # {'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}
     def _validate_with_fields(src, mapping):
         for key, field in mapping.items():
@@ -113,6 +160,14 @@ def validate_with_fields(key_field_mapping: dict, key_missing_abort_code: int=40
 
 
 def validate_with_jsonschema(jsonschema: dict, validation_error_abort_code: int=400):
+    """
+    A decorator to check request payload with jsonschema
+
+    If validation fails(jsonschema.exceptions.ValidationError raised), abort the :param:`validation_error_abort_code`.
+
+    :param jsonschema: jsonschema
+    :param validation_error_abort_code: abort code
+    """
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
