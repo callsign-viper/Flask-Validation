@@ -13,8 +13,6 @@ def json_required():
 
     if you decorate endpoint with this, it will ensure that the request has a valid payload type before access endpoint
     if header's content type is not ``application/json``, abort the ``invalid_content_type_abort_code``
-
-    :param invalid_content_type_abort_code: abort code
     """
     def decorator(fn):
         @wraps(fn)
@@ -39,7 +37,6 @@ def validate_keys(required_keys):
     like this ``['a', 'b', {'c': ['q' ,'z']}]``
 
     :param required_keys: key list to check request body's JSON
-    :param key_missing_abort_code: abort code
     """
     # ['a', 'b', {'c': ['q' ,'z']}]
 
@@ -78,8 +75,6 @@ def validate_common(key_type_mapping: dict):
 
 
     :param key_type_mapping: A dictionary for payload check with this form ``{<key name>: <type class>}``
-    :param key_missing_abort_code: abort code
-    :param invalid_type_abort_code: abort code
     """
     # {'a': str, 'b': int, 'c': {'d': int, 'e': str}}
 
@@ -121,8 +116,6 @@ def validate_with_fields(key_field_mapping: dict):
     like this ``{'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}``
 
     :param key_field_mapping: A dictionary for payload check with this form ``{<key name>: <field class>}``
-    :param key_missing_abort_code: abort code
-    :param validation_failure_abort_code: abort code
     """
     # {'a': StringField(allow_empty=False), 'b': IntField(min_value=0), 'c': {'d': BooleanField()}}
 
@@ -175,7 +168,6 @@ def validate_with_jsonschema(jsonschema: dict):
     If validation fails(jsonschema.exceptions.ValidationError raised), abort the  ``validation_error_abort_code``.
 
     :param jsonschema: jsonschema
-    :param validation_error_abort_code: abort code
     """
 
     def decorator(fn):

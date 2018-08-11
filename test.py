@@ -3,7 +3,7 @@ from unittest import TestCase
 from flask import Flask
 from flask.testing import FlaskClient
 
-from flask_validator import *
+from flask_validation import *
 
 
 class BaseTestCase(TestCase):

@@ -131,7 +131,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'flask_validator.tex', 'flask\\_validator Documentation',
+    (master_doc, 'flask_validation.tex', 'flask\\_validator Documentation',
      'Author', 'manual'),
 ]
 
@@ -141,7 +141,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'flask_validator', 'flask_validator Documentation',
+    (master_doc, 'flask_validation', 'flask_validation Documentation',
      [author], 1)
 ]
 
@@ -152,8 +152,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'flask_validator', 'flask_validator Documentation',
-     author, 'flask_validator', 'One line description of project.',
+    (master_doc, 'flask_validation', 'flask_validation Documentation',
+     author, 'flask_validation', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -186,4 +186,4 @@ epub_exclude_files = ['search.html']
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-# autodoc_mock_imports = ['flask_validator']
+# autodoc_mock_imports = ['flask_validation']

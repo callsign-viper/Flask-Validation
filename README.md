@@ -1,4 +1,8 @@
-# Flask-Validator-Extended [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validator.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validator) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest)
+# Flask-Validation [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validator.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validator) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest)
+
+```
+$ pip install flask-validation
+```
 
 Pythonic JSON payload validator for requested JSON payload of Flask
 
@@ -10,7 +14,7 @@ Flask를 위한 view decorator 기반의 JSON 요청 데이터 validation 라이
 
 ```
 from flask import Flask
-from flask_validator import json_requiredd, Validator
+from flask_validation import json_requiredd, Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -27,7 +31,7 @@ def index():
 
 ```
 from flask import Flask
-from flask_validator import validate_keysd, Validator
+from flask_validation import validate_keysd, Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -43,7 +47,7 @@ Iterable 내부의 dictionary로 nested JSON 처리가 가능합니다.
 
 ```
 from flask import Flask
-from flask_validator import validate_keys, Validator
+from flask_validation import validate_keys, Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -60,7 +64,7 @@ key와 타입을 함께 검사합니다. 요청 payload에 key_type_mapping에�
 
 ```
 from flask import Flask
-from flask_validator import validate_common, Validator
+from flask_validation import validate_common, Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -76,7 +80,7 @@ value를 dictionary로 주어 nested JSON 처리가 가능합니다.
 
 ```
 from flask import Flask
-from flask_validator import validate_common, Validator
+from flask_validation import validate_common, Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -93,9 +97,9 @@ def index():
 
 ```
 from flask import Flask
-from flask_validator import validate_with_fields
-from flask_validator import StringField, IntField
-from flask_Validator import Validator
+from flask_validation import validate_with_fields
+from flask_validation import StringField, IntField
+from flask_Validation import Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -111,9 +115,9 @@ value를 dictionary로 주어 nested JSON 처리가 가능합니다.
 
 ```
 from flask import Flask
-from flask_validator import validate_with_fields
-from flask_validator import StringField, IntField
-from flask_Validator import Validator
+from flask_validation import validate_with_fields
+from flask_validation import StringField, IntField
+from flask_Validation import Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -137,8 +141,8 @@ def index():
 
 ```
 from flask import Flask
-from flask_validator import validate_with_jsonschema
-from flask_Validator import Validator
+from flask_validation import validate_with_jsonschema
+from flask_validation import Validator
 
 app = Flask(__name__)
 Validator(app)

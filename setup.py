@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(
-    name='flask-validator-extended',
+    name='flask-validation',
     description='A Pythonic way for validate requested JSON payload of Flask',
-    version='1.1',
-    url='https://github.com/JoMingyu/Flask-Validator',
+    version='1.0',
+    url='https://github.com/JoMingyu/Flask-Validation',
     license='Apache License 2.0',
     author='PlanB',
     author_email='mingyu.planb@gmail.com',
@@ -19,5 +19,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    packages=['flask_validator']
+    packages=['flask_validation']
 )
