@@ -1,6 +1,6 @@
 # Flask-Validation [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validation.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validation) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest)
 
-```
+```bash
 $ pip install flask-validation
 ```
 
@@ -11,7 +11,7 @@ Flask를 위한 view decorator 기반의 JSON 요청 데이터 validation 라이
 ## Example Usages
 ### json_required
 
-```
+```python
 from flask import Flask
 from flask_validation import json_requiredd, Validator
 
@@ -27,7 +27,7 @@ def index():
 app.run()
 ```
 
-```
+```bash
 $ curl -d '' -v http://localhost:5000
 ...
 > POST / HTTP/1.1
@@ -43,7 +43,7 @@ $ curl -H "Content-Type: application/json" -d '' -v http://localhost:5000
 
 ### validate_keys
 
-```
+```python
 from flask import Flask
 from flask_validation import validate_keys, Validator
 
@@ -59,7 +59,7 @@ def index():
 app.run()
 ```
 
-```
+```bash
 $ curl -H "Content-Type: application/json" -d '{"name": "PlanB"}' -v http://localhost:5000
 ...
 > POST / HTTP/1.1
@@ -75,7 +75,7 @@ $ curl -H "Content-Type: application/json" -d '{"name": "PlanB", "age": 19, "pos
 
 ### others
 
-```
+```python
 from flask import Flask
 from flask_validation import validate_common, validate_with_fields, validate_with_jsonschema, Validator
 
