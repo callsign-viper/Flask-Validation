@@ -1,4 +1,4 @@
-# Flask-Validation [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validator.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validator) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest)
+# Flask-Validation [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validator.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validation) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest)
 
 ```
 $ pip install flask-validation
