@@ -1,9 +1,9 @@
 API documentation
 ========================
 
-Configuring Flask-Validate
+Configuring Flask-Validation
 ---------------------------
-.. automodule:: flask_validator.validator
+.. automodule:: flask_validation.validator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -11,7 +11,7 @@ Configuring Flask-Validate
 Decorators
 -----------
 
-.. automodule:: flask_validator.decorators
+.. automodule:: flask_validation.decorators
     :members:
     :undoc-members:
     :show-inheritance:
@@ -19,7 +19,7 @@ Decorators
 Fields
 -------
 
-.. automodule:: flask_validator.fields
+.. automodule:: flask_validation.fields
     :members:
     :undoc-members:
     :show-inheritance:
