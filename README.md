@@ -13,7 +13,7 @@ Flask를 위한 view decorator 기반의 JSON 요청 데이터 validation 라이
 
 ```python
 from flask import Flask
-from flask_validation import json_requiredd, Validator
+from flask_validation import json_required, Validator
 
 app = Flask(__name__)
 Validator(app)
@@ -125,4 +125,21 @@ def validate_3():
 
 
 app.run()
+```
+
+```bash
+$ curl -H "Content-Type: application/json" -d '{"name": "PlanB", "age": 19, "position": {"lati": 35.24, "longi": 127.681146}}' -v http://localhost:5000/1
+< HTTP/1.0 200 OK
+$ curl -H "Content-Type: application/json" -d '{"name": "PlanB", "age": 19, "position": {"lati": 35.24, "longi": 127}}' -v http://localhost:5000/1
+< HTTP/1.0 400 BAD REQUEST
+$
+$ curl -H "Content-Type: application/json" -d '{"name": "PlanB", "age": 19, "position": {"lati": 35, "longi": 127}}' -v http://localhost:5000/2
+< HTTP/1.0 200 OK
+$ curl -H "Content-Type: application/json" -d '{"name": "", "age": 19, "position": {"lati": 35, "longi": 127}}' -v http://localhost:5000/2
+< HTTP/1.0 400 BAD REQUEST
+$
+$ curl -H "Content-Type: application/json" -d '{"name": "PlanB", "age": 19, "position": {"lati": 35, "longi": 127}}' -v http://localhost:5000/3
+< HTTP/1.0 200 OK
+$ curl -H "Content-Type: application/json" -d '{"name": "PlanB", "age": "19", "position": {"lati": 35, "longi": 127}}' -v http://localhost:5000/3
+< HTTP/1.0 400 BAD REQUEST
 ```
