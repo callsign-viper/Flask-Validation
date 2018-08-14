@@ -14,5 +14,10 @@ python:
 
 install: pip install -r requirements.txt
 script: python3 -m "nose" --verbose test.py
+
+after_success:
+  - coverage report
+  - coveralls
+  
 notifications:
   email: false
