@@ -1,7 +1,9 @@
 os: linux
 sudo: false
 language: python
-cache: pip
+cache: 
+  - pip
+  - pip3
 
 python:
   - "3.3"
@@ -12,12 +14,15 @@ python:
   - "3.6-dev"  # 3.6 development branch
   - "3.7-dev"  # 3.7 development branch
 
-install: pip install -r requirements.txt
-script: python3 -m "nose" --verbose test.py
+install: 
+  - pip3 install -r requirements.txt
+  - pip3 install coveralls
+
+script: python3 -m "nose" --verbose --with-coverage --cover-package=. test.py
 
 after_success:
   - coverage report
   - coveralls
-  
+
 notifications:
   email: false
