@@ -1,4 +1,4 @@
-# Flask-Validation [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validation.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validation) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest)
+# Flask-Validation [![Build Status](https://travis-ci.org/JoMingyu/Flask-Validation.svg?branch=master)](https://travis-ci.org/JoMingyu/Flask-Validation) [![Documentation Status](https://readthedocs.org/projects/flask-validate/badge/?version=latest)](https://flask-validate.readthedocs.io/en/latest/?badge=latest) [![Coverage Status](https://coveralls.io/repos/github/callsign-viper/Flask-Validation/badge.svg?branch=master)](https://coveralls.io/github/callsign-viper/Flask-Validation?branch=master) 
 
 ```bash
 $ pip install flask-validation
