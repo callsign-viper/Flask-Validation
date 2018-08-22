@@ -3,6 +3,7 @@ from unittest import TestCase
 from flask import Flask
 from flask.testing import FlaskClient
 
+from flask_validation import common_regex as cr
 from flask_validation import *
 
 
@@ -142,4 +143,48 @@ class TestValidateWithJsonSchema(BaseTestCase):
     def test_validation_error(self):
         resp = self._json_post_request(self.client, json={'a': 'a', 'b': 1, 'c': {'d': 'a'}})
 
+        self.assertEqual(resp.status_code, 400)
+
+
+class TestValidateWithCommonRegex(BaseTestCase):
+    def setUp(self):
+        self.target_func = validate_with_fields
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func({
+            'email': StringField(regex=cr.email),
+            'url': StringField(regex=cr.url),
+            'visa_card': StringField(regex=cr.visa_card),
+            'master_card': StringField(regex=cr.master_card),
+            'isbn': StringField(regex=cr.isbn),
+            'hex': StringField(regex=cr.hex),
+            'ipv4': StringField(regex=cr.ipv4),
+            'digit': StringField(regex=cr.digit),
+            'date': StringField(regex=cr.date)
+        }))
+
+    def test_200(self):
+        resp = self._json_post_request(self.client, json={
+            'email': 'viper@istruly.sexy',
+            'url': 'https://www.google.com/',
+            'visa_card': '4000 1234 5678 9010',
+            'master_card': '5412 5412 5412 5412',
+            'isbn': '9791160501308',
+            'hex': '#ffb2d9',
+            'ipv4': '127.0.0.1',
+            'digit': '20010420',
+            'date': '2018/04/20'
+        })
+        self.assertEqual(resp.status_code, 200)
+
+    def test_validation_error(self):
+        resp = self._json_post_request(self.client, json={
+            'email': 'https://www.google.com/',
+            'url': 'viper@istruly.sexy',
+            'visa_card': '5412 5412 5412 5412',
+            'master_card': '4000 1234 5678 9010',
+            'isbn': '#ffb2d9',
+            'hex': '9791160501308',
+            'ipv4': '2018/04/20',
+            'digit': '127.0.0.1',
+            'date': '20010420'
+        })
         self.assertEqual(resp.status_code, 400)
