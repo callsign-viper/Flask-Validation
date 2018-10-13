@@ -45,11 +45,7 @@ test to accompany it.
 
 ## Documentation
 
-Sanic's documentation is built
-using [sphinx](http://www.sphinx-doc.org/en/1.5.1/). Guides are written in
-Markdown and can be found in the `docs` folder, while the module reference is
-automatically generated using `sphinx-apidoc`.
-
+Flask-Validation's documentation is built
 To generate the documentation from scratch:
 
 ```bash
