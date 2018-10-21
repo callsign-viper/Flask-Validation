@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='flask-validation',
     description='A Pythonic way for validate requested JSON payload of Flask',
-    version='1.1',
+    version='1.0.2',
     url='https://github.com/JoMingyu/Flask-Validation',
     license='Apache License 2.0',
     author='PlanB',
