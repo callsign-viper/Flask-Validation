@@ -36,7 +36,7 @@ class BaseTestCase(TestCase):
 class TestJsonRequired(BaseTestCase):
     def setUp(self):
         self.target_func = json_required
-        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func())
+        self.client = self._get_test_client_of_decorated_view_function_registered_flask_app(self.target_func)
 
     def test_200(self):
         resp = self._json_post_request(self.client)

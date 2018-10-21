@@ -7,23 +7,21 @@ from flask import abort, request, current_app
 from .fields import _BaseField
 
 
-def json_required():
+def json_required(fn):
     """
     A decorator to check header type is ``application/json``
 
     if you decorate endpoint with this, it will ensure that the request has a valid payload type before access endpoint
     if header's content type is not ``application/json``, abort the ``invalid_content_type_abort_code``
     """
-    def decorator(fn):
-        @wraps(fn)
-        def wrapper(*args, **kwargs):
-            invalid_content_type_abort_code = current_app.config['INVALID_CONTENT_TYPE_ABORT_CODE']
-            if not request.is_json:
-                abort(invalid_content_type_abort_code)
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        invalid_content_type_abort_code = current_app.config['INVALID_CONTENT_TYPE_ABORT_CODE']
+        if not request.is_json:
+            abort(invalid_content_type_abort_code)
 
-            return fn(*args, **kwargs)
-        return wrapper
-    return decorator
+        return fn(*args, **kwargs)
+    return wrapper
 
 
 def validate_keys(required_keys):
@@ -135,8 +133,6 @@ def validate_with_fields(key_field_mapping: dict):
                             # nullable하고, 실제로 value가 null이라면 validation 필요 x
                             continue
 
-                    print(value)
-                    print(field.validate(value))
                     if field.validate(value) is False:
                         abort(validation_failure_abort_code)
             elif isinstance(field, dict):

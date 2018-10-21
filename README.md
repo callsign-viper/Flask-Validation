@@ -19,7 +19,7 @@ app = Flask(__name__)
 Validator(app)
 
 
-@json_required()
+@json_required
 @app.route('/', methods=('POST'))
 def index():
     return 'hello!'
